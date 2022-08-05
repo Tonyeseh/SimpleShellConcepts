@@ -1,68 +1,74 @@
-#include <stdio.h>
 #include <string.h>
+#include <stdio.h>
 #include <stdlib.h>
-#include <sys/types.h>
-#include <sys/wait.h>
 
 /**
- * split - splits a string and returns an array of each word of the string
+ * split - split strings and stores the addresses in an array
  *
- * @str: string to be splitted
- * @delim: delimiter
+ * @str: strin
+ * @tok: tok
  *
- * Return: returns an array of array of strings or NULL if anything goes wrong
+ * Return: Pointer to array of strings
  */
 
-char **split(char *str, char *delim)
+char **split(char *str, char *tok)
 {
-	char *strcopy;
-	char **token_ptr;
-	/*char *token;*/
-	int i = 0, len = 0;
+
+	char **splitted;
+	char *strcopy = NULL;
+	int len = 0, i = 1;
 
 	strcopy = malloc(sizeof(char) * strlen(str));
-	if (strcopy == NULL)
-		return (NULL);
-	strcpy(strcopy, str);
-	
-	if (strtok(strcopy, delim) != NULL)
-		len++;
-	while (strtok(NULL, delim) != NULL)
-		len++;
 
-	token_ptr = malloc(sizeof(char *) * (len + 1));
-	if (len > 0 && token_ptr != NULL)
+	strcpy(strcopy, str);
+	if (strtok(strcopy, tok) != NULL)
+		len++;
+	while (strtok(NULL, tok) != NULL)
 	{
-		token_ptr[i] = strtok(str, delim);
-		while (token_ptr[i] != NULL)
+		len++;
+	}
+
+	if (len > 0)
+	{
+		splitted = malloc(sizeof(char *) * len + 1);
+
+		if (splitted != NULL)
 		{
-			i++;
-			token_ptr[i] = strtok(NULL, delim);
+			splitted[0] = strtok(str, tok);
+			while (len > i)
+			{
+				splitted[i] = strtok(NULL, tok);
+				i++;
+			}
+			splitted[i] = NULL;
+			return (splitted);
 		}
-		return (token_ptr);
 	}
 	return (NULL);
 }
 
 /**
- * main - prints the splitted string
+ * main - prints out an array of strings
  *
- * Return: 0 if everything goes well
+ * Return 0 Always
  */
 
 int main(void)
 {
-	char **point;
-	char str[] = "The config of the place";
-	char *delim = "";
-	int i = 0;
+	char **ptrstring;
+	char *tok = " ";
 
-	point = split(str, delim);
-	while (point != NULL && point[i] != NULL)
+	char gfg[100] = "  1997 ford e350 ac 3000.00";
+
+	ptrstring = split(gfg, tok);
+	if (ptrstring == NULL)
+		return (1);
+
+
+	while (*ptrstring)
 	{
-		printf("%s\n", point[i]);
-		i++;
+		printf("%s\n", *ptrstring);
+		ptrstring++;
 	}
 	return (0);
-
 }
